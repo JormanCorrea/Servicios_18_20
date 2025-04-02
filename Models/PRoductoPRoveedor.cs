@@ -9,6 +9,7 @@
 
 namespace Servicios_18_20.Models
 {
+    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     
@@ -20,8 +21,10 @@ namespace Servicios_18_20.Models
         public int ValorUnitario { get; set; }
         public System.DateTime FechaCotizacion { get; set; }
         public System.DateTime FechaValidez { get; set; }
-    
+
+        [JsonIgnore]
         public virtual PRODucto PRODucto { get; set; }
+        [JsonIgnore]
         public virtual PROVeedor PROVeedor { get; set; }
     }
 }

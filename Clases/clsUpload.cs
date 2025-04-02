@@ -16,7 +16,7 @@ namespace Servicios_18_20.Clases
         public HttpRequestMessage request { get; set; } 
         public string Datos { get; set; } //Datos a enviar
 		public string Proceso { get; set; } //Proceso a realizar
-		public List<string> Archivos { get; set; } //Archivos a enviar
+		private List<string> Archivos { get; set; } //Archivos a enviar
 		public async Task<HttpResponseMessage> CargarArchivos() //Metodo para cargar archivos
         {
 			if (!request.Content.IsMimeMultipartContent())
@@ -28,6 +28,7 @@ namespace Servicios_18_20.Clases
             try
             {
                 //Leer Archivo
+                Archivos = new List<string>(); //Inicializa la lista de archivos
                 await request.Content.ReadAsMultipartAsync(provider);
                 foreach(MultipartFileData file in provider.FileData) //Aquie queda la coleccion de archivos
                 {
@@ -45,11 +46,13 @@ namespace Servicios_18_20.Clases
                     {
                         File.Delete(file.LocalFileName);
                         return request.CreateResponse(HttpStatusCode.Conflict, "El Archivo ya existe");
-                    }
+                    }                    
                     File.Move(file.LocalFileName, Path.Combine(root, filename));
+                    Archivos.Add(filename); //Agrega el archivo a la lista
                 }
                 //RETORNAR RESPUESTA EXITOSA
-                return request.CreateResponse(HttpStatusCode.OK, "Se grabo el archivo exitosamente");
+                string Respuesta = GrabarInfoDB(); //Llama al metodo para grabar la informacion en la base de datos
+                return request.CreateResponse(HttpStatusCode.OK, "Se grabo el archivo exitosamente " + Respuesta);
             }
             catch (Exception ex)
             {
@@ -58,6 +61,17 @@ namespace Servicios_18_20.Clases
             }
         }
 
+        private string GrabarInfoDB()
+        {
+            switch(Proceso.ToUpper())
+            {
+               case "PRODUCTO":
+                    clsProducto producto = new clsProducto();
+                    return producto.GrabarImagen(Datos, Archivos);
+                default:
+                    return "Proceso no definido";
+            }
+        }
 
     }
 }

@@ -118,5 +118,18 @@ namespace Servicios_18_20.Clases
 				return "Error al inactivar el producto: " + ex.Message;
             }
 		}
+
+		public string GrabarImagen(string idProducto, List<string> Archivos)
+		{
+			foreach (string archivo in Archivos)
+            {
+                ImagenesProducto imagen = new ImagenesProducto(); //CREAR OBJETO DE IMAGENES PRODUCTO
+				imagen.idProducto = Convert.ToInt32(idProducto); //ASIGNAR EL ID DEL PRODUCTO
+				imagen.NombreImagen = archivo; //ASIGNAR EL NOMBRE DE LA IMAGEN
+                dbSuper.ImagenesProductoes.Add(imagen); //AGREGAR IMAGEN A LA LISTA DE ENTITY FRAMEWORK
+				dbSuper.SaveChanges(); //GUARDAR CAMBIOS EN LA BASE DE DATOS
+            }
+			return "Archivos procesados correctamente";
+        }
     }
 }
