@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="DBSuperModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="DBSuperModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="CARGo">
           <Key>
             <PropertyRef Name="Codigo" />
@@ -135,6 +135,14 @@
           <Property Name="DocumentoProveedor" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="Fecha" Type="datetime" Nullable="false" />
           <Property Name="FechaPago" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ImagenesProducto">
+          <Key>
+            <PropertyRef Name="idImagen" />
+          </Key>
+          <Property Name="idImagen" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NombreImagen" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="idProducto" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="NOtaCRedito">
           <Key>
@@ -349,6 +357,18 @@
             </Principal>
             <Dependent Role="EMpleadoCArgo">
               <PropertyRef Name="Documento" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ImagenesProducto_PRODucto">
+          <End Role="PRODucto" Type="Self.PRODucto" Multiplicity="1" />
+          <End Role="ImagenesProducto" Type="Self.ImagenesProducto" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PRODucto">
+              <PropertyRef Name="Codigo" />
+            </Principal>
+            <Dependent Role="ImagenesProducto">
+              <PropertyRef Name="idProducto" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -606,6 +626,7 @@
           <EntitySet Name="EMpleadoCArgo" EntityType="Self.EMpleadoCArgo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FACTura" EntityType="Self.FACTura" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FActuraCOmpra" EntityType="Self.FActuraCOmpra" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ImagenesProducto" EntityType="Self.ImagenesProducto" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="NOtaCRedito" EntityType="Self.NOtaCRedito" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PAIS" EntityType="Self.PAIS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Perfil" EntityType="Self.Perfil" Schema="dbo" store:Type="Tables" />
@@ -647,6 +668,10 @@
           <AssociationSet Name="FK_EMpleadoCArgo_EMPLeado" Association="Self.FK_EMpleadoCArgo_EMPLeado">
             <End Role="EMPLeado" EntitySet="EMPLeado" />
             <End Role="EMpleadoCArgo" EntitySet="EMpleadoCArgo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ImagenesProducto_PRODucto" Association="Self.FK_ImagenesProducto_PRODucto">
+            <End Role="PRODucto" EntitySet="PRODucto" />
+            <End Role="ImagenesProducto" EntitySet="ImagenesProducto" />
           </AssociationSet>
           <AssociationSet Name="FK_Usuario_EMPLeado" Association="Self.FK_Usuario_EMPLeado">
             <End Role="EMPLeado" EntitySet="EMPLeado" />
@@ -729,8 +754,7 @@
             <End Role="PRoductoPRoveedor" EntitySet="PRoductoPRoveedor" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="DBSuperModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -938,6 +962,7 @@
           <NavigationProperty Name="DEtalleFacturaCompras" Relationship="Self.FK_DEtalleFacturaCompraucto" FromRole="PRODucto" ToRole="DEtalleFacturaCompra" />
           <NavigationProperty Name="TIpoPRoducto" Relationship="Self.FKProducto_TIpoPRoducto" FromRole="PRODucto" ToRole="TIpoPRoducto" />
           <NavigationProperty Name="PRoductoPRoveedors" Relationship="Self.FKProductoPRoveedoructo" FromRole="PRODucto" ToRole="PRoductoPRoveedor" />
+          <NavigationProperty Name="ImagenesProductoes" Relationship="DBSuperModel.FK_ImagenesProducto_PRODucto" FromRole="PRODucto" ToRole="ImagenesProducto" />
         </EntityType>
         <EntityType Name="PRoductoPRoveedor">
           <Key>
@@ -1511,7 +1536,33 @@
             <End Role="Usuario" EntitySet="Usuarios" />
             <End Role="Usuario_Perfil" EntitySet="Usuario_Perfil" />
           </AssociationSet>
+          <EntitySet Name="ImagenesProductoes" EntityType="DBSuperModel.ImagenesProducto" />
+          <AssociationSet Name="FK_ImagenesProducto_PRODucto" Association="DBSuperModel.FK_ImagenesProducto_PRODucto">
+            <End Role="PRODucto" EntitySet="PRODuctoes" />
+            <End Role="ImagenesProducto" EntitySet="ImagenesProductoes" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="ImagenesProducto">
+          <Key>
+            <PropertyRef Name="idImagen" />
+          </Key>
+          <Property Name="idImagen" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NombreImagen" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="idProducto" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="PRODucto" Relationship="DBSuperModel.FK_ImagenesProducto_PRODucto" FromRole="ImagenesProducto" ToRole="PRODucto" />
+        </EntityType>
+        <Association Name="FK_ImagenesProducto_PRODucto">
+          <End Type="DBSuperModel.PRODucto" Role="PRODucto" Multiplicity="1" />
+          <End Type="DBSuperModel.ImagenesProducto" Role="ImagenesProducto" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PRODucto">
+              <PropertyRef Name="Codigo" />
+            </Principal>
+            <Dependent Role="ImagenesProducto">
+              <PropertyRef Name="idProducto" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1805,6 +1856,15 @@
                 <ScalarProperty Name="idUsuario" ColumnName="idUsuario" />
                 <ScalarProperty Name="idPerfil" ColumnName="idPerfil" />
                 <ScalarProperty Name="Activo" ColumnName="Activo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ImagenesProductoes">
+            <EntityTypeMapping TypeName="DBSuperModel.ImagenesProducto">
+              <MappingFragment StoreEntitySet="ImagenesProducto">
+                <ScalarProperty Name="idProducto" ColumnName="idProducto" />
+                <ScalarProperty Name="NombreImagen" ColumnName="NombreImagen" />
+                <ScalarProperty Name="idImagen" ColumnName="idImagen" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

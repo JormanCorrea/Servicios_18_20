@@ -12,15 +12,12 @@ namespace Servicios_18_20.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class DEtalleFacturaCompra
+    public partial class ImagenesProducto
     {
-        public int Codigo { get; set; }
-        public int NumeroFactura { get; set; }
-        public int CodigoProducto { get; set; }
-        public int Cantidad { get; set; }
-        public int ValorUnitario { get; set; }
+        public int idImagen { get; set; }
+        public string NombreImagen { get; set; }
+        public int idProducto { get; set; }
     
         public virtual PRODucto PRODucto { get; set; }
-        public virtual FActuraCOmpra FActuraCOmpra { get; set; }
     }
 }

@@ -52,5 +52,6 @@ namespace Servicios_18_20.Models
         public virtual DbSet<TIpoTElefono> TIpoTElefonoes { get; set; }
         public virtual DbSet<Usuario> Usuarios { get; set; }
         public virtual DbSet<Usuario_Perfil> Usuario_Perfil { get; set; }
+        public virtual DbSet<ImagenesProducto> ImagenesProductoes { get; set; }
     }
 }
